@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="color-scheme" content="dark">
+<title>BlackCode</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2305060a'/%3E%3Ctext x='16' y='23' font-size='18' font-family='monospace' fill='%2300f0ff' text-anchor='middle'%3EB%3C/text%3E%3C/svg%3E">
+<style>
+  :root{
+    --bg:#05060a; --panel:#0a0d14; --cyan:#00f0ff; --mag:#ff2bd6;
+    --dim:#7a8494; --ok:#39ff88; --warn:#ffb020; --border:#1b2233;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    background:var(--bg);
+    color:#dfe6f0;
+    font-family:"JetBrains Mono","Fira Code","Cascadia Code",Consolas,Menlo,monospace;
+    display:flex;flex-direction:column;align-items:center;
+    min-height:100vh;overflow-x:hidden;
+    padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+  /* شبكة + نيون خلفية */
+  body::before{
+    content:"";position:fixed;inset:0;z-index:-2;
+    background:
+      radial-gradient(ellipse 80% 50% at 20% 0%, rgba(0,240,255,.07), transparent),
+      radial-gradient(ellipse 60% 40% at 85% 100%, rgba(255,43,214,.06), transparent),
+      linear-gradient(rgba(0,240,255,.028) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,240,255,.028) 1px, transparent 1px);
+    background-size:auto,auto,42px 42px,42px 42px;
+  }
+  /* سكان لاين */
+  body::after{
+    content:"";position:fixed;inset:0;z-index:50;pointer-events:none;
+    background:repeating-linear-gradient(0deg, rgba(0,0,0,.16) 0 1px, transparent 1px 3px);
+    mix-blend-mode:multiply;
+  }
+
+  .wrap{width:min(720px,92vw);padding:56px 0 40px}
+
+  /* شريط اللغة */
+  .topbar{display:flex;justify-content:flex-end;margin-bottom:38px}
+  select{
+    background:var(--panel);color:var(--cyan);border:1px solid var(--border);
+    font:inherit;font-size:.82rem;padding:8px 12px;cursor:pointer;
+    appearance:none;-webkit-appearance:none;border-radius:2px;
+    box-shadow:0 0 12px rgba(0,240,255,.12), inset 0 0 8px rgba(0,240,255,.05);
+  }
+  select:hover{border-color:var(--cyan)}
+  select:focus{outline:1px solid var(--cyan)}
+
+  /* العنوان glitch */
+  .logo{
+    text-align:center;font-weight:800;letter-spacing:.35em;
+    font-size:clamp(1.9rem,6vw,3.2rem);color:#fff;position:relative;
+    text-transform:uppercase;margin-bottom:10px;user-select:none;
+  }
+  .logo::before,.logo::after{
+    content:attr(data-t);position:absolute;inset:0;overflow:hidden;
+  }
+  .logo::before{color:var(--cyan);animation:gl1 3.2s infinite steps(1)}
+  .logo::after{color:var(--mag);animation:gl2 3.2s infinite steps(1)}
+  @keyframes gl1{0%,89%{clip-path:inset(100% 0 0 0)}90%{clip-path:inset(10% 0 78% 0);transform:translateX(-3px)}93%{clip-path:inset(62% 0 18% 0);transform:translateX(2px)}96%{clip-path:inset(30% 0 55% 0)}100%{clip-path:inset(100% 0 0 0)}}
+  @keyframes gl2{0%,91%{clip-path:inset(100% 0 0 0)}92%{clip-path:inset(75% 0 8% 0);transform:translateX(3px)}95%{clip-path:inset(18% 0 70% 0);transform:translateX(-2px)}98%{clip-path:inset(48% 0 40% 0)}100%{clip-path:inset(100% 0 0 0)}}
+
+  .tagline{text-align:center;color:var(--dim);font-size:.9rem;margin-bottom:46px}
+  .tagline b{color:var(--cyan);font-weight:400}
+
+  /* عنوان القسم */
+  .sec-h{
+    display:flex;align-items:center;gap:12px;color:var(--cyan);
+    font-size:.78rem;letter-spacing:.25em;text-transform:uppercase;margin:42px 0 16px;
+  }
+  .sec-h::before{content:">>";color:var(--mag)}
+  .sec-h::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent)}
+
+  /* صناديق */
+  .panel{
+    background:var(--panel);border:1px solid var(--border);border-radius:3px;
+    padding:22px;position:relative;
+    box-shadow:0 0 24px rgba(0,0,0,.5);
+  }
+  .panel::before,.panel::after{
+    content:"";position:absolute;width:14px;height:14px;border-color:var(--cyan);
+    border-style:solid;opacity:.85;
+  }
+  .panel::before{top:-1px;left:-1px;border-width:2px 0 0 2px}
+  .panel::after{bottom:-1px;right:-1px;border-width:0 2px 2px 0}
+
+  /* صندوق الأونيون */
+  .onion{
+    display:flex;gap:10px;flex-wrap:wrap;align-items:stretch;
+  }
+  .addr{
+    flex:1;min-width:230px;background:#000;color:var(--ok);
+    padding:14px;font-size:.85rem;word-break:break-all;line-height:1.7;
+    border:1px solid #123;box-shadow:inset 0 0 14px rgba(57,255,136,.08);
+  }
+  .addr::before{content:"▸ ";color:var(--dim)}
+  .btn{
+    font:inherit;font-size:.85rem;padding:14px 22px;cursor:pointer;
+    background:transparent;border:1px solid;border-radius:2px;
+    transition:all .15s;white-space:nowrap;
+  }
+  .btn-copy{color:var(--cyan);border-color:var(--cyan)}
+  .btn-copy:hover{background:var(--cyan);color:#000;box-shadow:0 0 18px rgba(0,240,255,.6)}
+  .btn-open{color:var(--mag);border-color:var(--mag)}
+  .btn-open:hover{background:var(--mag);color:#000;box-shadow:0 0 18px rgba(255,43,214,.6)}
+  .btn:active{transform:translateY(1px)}
+
+  /* الخطوات */
+  .steps{counter-reset:s}
+  .step{
+    display:flex;gap:14px;align-items:flex-start;padding:12px 4px;
+    border-bottom:1px dashed var(--border);font-size:.88rem;color:#b8c2d0;
+  }
+  .step:last-child{border-bottom:none}
+  .step::before{
+    counter-increment:s;content:"0" counter(s);color:var(--mag);font-weight:700;
+    font-size:.95rem;min-width:2em;
+  }
+
+  /* تحذير التصيد */
+  .warn{border-color:#4a3000}
+  .warn::before,.warn::after{border-color:var(--warn)}
+  .warn h3{color:var(--warn);font-size:.8rem;letter-spacing:.2em;text-transform:uppercase;margin-bottom:8px}
+  .warn p{font-size:.85rem;color:#d0c090;line-height:1.7}
+
+  .badge{
+    display:inline-flex;align-items:center;gap:8px;margin-top:6px;
+    font-size:.72rem;color:var(--cyan);border:1px solid var(--cyan);
+    padding:4px 10px;border-radius:999px;letter-spacing:.15em;
+  }
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--ok);
+    box-shadow:0 0 8px var(--ok);animation:pulse 1.8s infinite}
+  @keyframes pulse{50%{opacity:.35}}
+
+  footer{
+    margin-top:52px;text-align:center;color:var(--dim);
+    font-size:.72rem;letter-spacing:.12em;
+  }
+  footer span{color:var(--border)}
+
+  [dir="rtl"] .sec-h::before{content:"<<"}
+  [dir="rtl"] .addr{direction:ltr;text-align:left}
+
+  /* بدون JS */
+  .nojs{
+    text-align:center;color:var(--warn);font-size:.8rem;padding:14px;
+    border:1px dashed var(--warn);border-radius:2px;margin-bottom:24px;
+  }
+  html:not([data-js]) .nojs{display:block}
+  [data-js] .nojs{display:none}
+</style>
+</head>
+<body>
+<noscript><div class="nojs">JavaScript is off — the address below still works: copy it manually.</div></noscript>
+<div class="wrap">
+  <div class="topbar">
+    <select id="lang" aria-label="Language">
+      <option value="ar">العربية</option>
+      <option value="en">English</option>
+      <option value="ru">Русский</option>
+      <option value="es">Español</option>
+      <option value="fr">Français</option>
+      <option value="de">Deutsch</option>
+      <option value="tr">Türkçe</option>
+      <option value="fa">فارسی</option>
+      <option value="zh">中文</option>
+      <option value="pt">Português</option>
+      <option value="it">Italiano</option>
+      <option value="uk">Українська</option>
+    </select>
+  </div>
+
+  <h1 class="logo" data-t="BlackCode">BlackCode</h1>
+  <p class="tagline"><span data-i="tagline"></span></p>
+
+  <span class="badge"><span class="dot"></span><span data-i="badge"></span></span>
+
+  <div class="sec-h"><span data-i="addrTitle"></span></div>
+  <div class="panel">
+    <div class="onion">
+      <div class="addr">e4e67lxi4m33rcm5ztfcuyohjrjhhbgavn36flpeyqony5ev5kts5rqd.onion</div>
+    </div>
+    <div class="onion" style="margin-top:12px">
+      <button class="btn btn-copy" id="copyBtn" data-i="copy"></button>
+      <a class="btn btn-open" href="http://e4e67lxi4m33rcm5ztfcuyohjrjhhbgavn36flpeyqony5ev5kts5rqd.onion/" data-i="openBtn"></a>
+    </div>
+  </div>
+
+  <div class="sec-h"><span data-i="howTitle"></span></div>
+  <div class="panel">
+    <div class="steps">
+      <div class="step" data-i="s1"></div>
+      <div class="step" data-i="s2"></div>
+      <div class="step" data-i="s3"></div>
+    </div>
+  </div>
+
+  <div class="sec-h"><span data-i="warnTitle"></span></div>
+  <div class="panel warn">
+    <h3 data-i="warnHead"></h3>
+    <p data-i="warnBody"></p>
+  </div>
+
+  <footer><span data-i="footer"></span></footer>
+</div>
+
+<script>
+document.documentElement.dataset.js = "1";
+
+const ONION = "e4e67lxi4m33rcm5ztfcuyohjrjhhbgavn36flpeyqony5ev5kts5rqd.onion";
+
+const I18N = {
+  ar:{dir:"rtl",tagline:"بوابة الدخول — تعمل عبر شبكة تور فقط",badge:"أونيون فقط",addrTitle:"العنوان",copy:"نسخ العنوان",copied:"تم النسخ ✓",openBtn:"افتح في متصفح تور",howTitle:"طريقة الوصول",s1:"حمّل متصفح تور من موقعه الرسمي torproject.org",s2:"انسخ العنوان المعروض بالأعلى",s3:"الصقه في شريط العنوان بمتصفح تور وادخل",warnTitle:"أمان",warnHead:"تحذير من التصيد",warnBody:"العنوان المعروض في هذه الصفحة هو الرابط الوحيد الرسمي. أي عنوان آخر يدّعي أنه لنا هو تقليد — تحقق دائماً من أول حرفين وطول العنوان.",footer:"بدون تتبع · بدون كوكيز · بدون طلبات خارجية"},
+  en:{tagline:"Entry point — Tor network only",badge:"ONION ONLY",addrTitle:"Address",copy:"Copy address",copied:"Copied ✓",openBtn:"Open in Tor Browser",howTitle:"How to access",s1:"Download Tor Browser from the official site torproject.org",s2:"Copy the address shown above",s3:"Paste it into Tor Browser and hit enter",warnTitle:"Security",warnHead:"Phishing warning",warnBody:"The address shown on this page is the only official one. Any other address claiming to be us is a fake — always check the length and characters.",footer:"No tracking · No cookies · No external requests"},
+  ru:{tagline:"Точка входа — только сеть Tor",badge:"ТОЛЬКО TOR",addrTitle:"Адрес",copy:"Копировать адрес",copied:"Скопировано ✓",openBtn:"Открыть в Tor Browser",howTitle:"Как попасть",s1:"Скачайте Tor Browser с официального сайта torproject.org",s2:"Скопируйте адрес выше",s3:"Вставьте его в Tor Browser и нажмите ввод",warnTitle:"Безопасность",warnHead:"Осторожно, фишинг",warnBody:"Адрес на этой странице — единственный официальный. Любой другой адрес — подделка. Всегда сверяйте длину и символы.",footer:"Без трекеров · Без cookie · Без внешних запросов"},
+  es:{tagline:"Punto de entrada — solo red Tor",badge:"SOLO ONION",addrTitle:"Dirección",copy:"Copiar dirección",copied:"¡Copiado ✓",openBtn:"Abrir en Tor Browser",howTitle:"Cómo acceder",s1:"Descarga Tor Browser del sitio oficial torproject.org",s2:"Copia la dirección mostrada arriba",s3:"Pégala en Tor Browser y presiona entrar",warnTitle:"Seguridad",warnHead:"Aviso de phishing",warnBody:"La dirección mostrada aquí es la única oficial. Cualquier otra dirección que se haga pasar por nosotros es falsa — verifica siempre los caracteres.",footer:"Sin rastreo · Sin cookies · Sin peticiones externas"},
+  fr:{tagline:"Point d'entrée — réseau Tor uniquement",badge:"ONION UNIQUEMENT",addrTitle:"Adresse",copy:"Copier l'adresse",copied:"Copié ✓",openBtn:"Ouvrir dans Tor Browser",howTitle:"Comment accéder",s1:"Téléchargez Tor Browser depuis le site officiel torproject.org",s2:"Copiez l'adresse affichée ci-dessus",s3:"Collez-la dans Tor Browser et validez",warnTitle:"Sécurité",warnHead:"Alerte au phishing",warnBody:"L'adresse affichée sur cette page est la seule officielle. Toute autre adresse usurpant notre nom est une contrefaçon — vérifiez toujours les caractères.",footer:"Sans pistage · Sans cookies · Sans requêtes externes"},
+  de:{tagline:"Einstiegspunkt — nur Tor-Netzwerk",badge:"NUR ONION",addrTitle:"Adresse",copy:"Adresse kopieren",copied:"Kopiert ✓",openBtn:"In Tor Browser öffnen",howTitle:"Zugang",s1:"Lade Tor Browser von der offiziellen Seite torproject.org herunter",s2:"Kopiere die oben gezeigte Adresse",s3:"Füge sie in Tor Browser ein und bestätige",warnTitle:"Sicherheit",warnHead:"Phishing-Warnung",warnBody:"Die hier gezeigte Adresse ist die einzige offizielle. Jede andere Adresse, die sich für uns ausgibt, ist gefälscht — prüfe immer die Zeichen.",footer:"Kein Tracking · Keine Cookies · Keine externen Anfragen"},
+  tr:{tagline:"Giriş noktası — yalnızca Tor ağı",badge:"SADECE ONION",addrTitle:"Adres",copy:"Adresi kopyala",copied:"Kopyalandı ✓",openBtn:"Tor Browser'da aç",howTitle:"Nasıl erişilir",s1:"Tor Browser'ı resmi siteden indirin: torproject.org",s2:"Yukarıda gösterilen adresi kopyalayın",s3:"Tor Browser'a yapıştırın ve girin",warnTitle:"Güvenlik",warnHead:"Oltalama uyarısı",warnBody:"Bu sayfada gösterilen adres tek resmi adrestir. Bizim adımıza ortaya çıkan başka herhangi bir adres sahtedir — karakterleri her zaman kontrol edin.",footer:"İzleme yok · Çerez yok · Harici istek yok"},
+  fa:{dir:"rtl",tagline:"نقطه ورود — فقط از طریق شبکه تور",badge:"فقط اونیون",addrTitle:"آدرس",copy:"کپی آدرس",copied:"کپی شد ✓",openBtn:"باز کردن در مرورگر تور",howTitle:"روش دسترسی",s1:"مرورگر تور را از سایت رسمی torproject.org دانلود کنید",s2:"آدرس نمایش‌داده‌شده در بالا را کپی کنید",s3:"آن را در مرورگر تور جای‌گذاری کرده و وارد شوید",warnTitle:"امنیت",warnHead:"هشدار فیشینگ",warnBody:"آدرس نمایش‌داده‌شده در این صفحه تنها آدرس رسمی است. هر آدرس دیگری که خود را به جای ما جا بزند جعلی است — همیشه کاراکترها را بررسی کنید.",footer:"بدون ردیابی · بدون کوکی · بدون درخواست خارجی"},
+  zh:{tagline:"入口 — 仅限 Tor 网络",badge:"仅洋葱地址",addrTitle:"地址",copy:"复制地址",copied:"已复制 ✓",openBtn:"在 Tor 浏览器中打开",howTitle:"访问方法",s1:"从官方网站 torproject.org 下载 Tor 浏览器",s2:"复制上方显示的地址",s3:"粘贴到 Tor 浏览器中并回车",warnTitle:"安全",warnHead:"钓鱼警告",warnBody:"本页面显示的地址是唯一官方地址。任何冒充我们的其他地址都是伪造的——请始终核对字符。",footer:"无追踪 · 无 Cookie · 无外部请求"},
+  pt:{tagline:"Ponto de entrada — apenas rede Tor",badge:"SOMENTE ONION",addrTitle:"Endereço",copy:"Copiar endereço",copied:"Copiado ✓",openBtn:"Abrir no Tor Browser",howTitle:"Como acessar",s1:"Baixe o Tor Browser do site oficial torproject.org",s2:"Copie o endereço mostrado acima",s3:"Cole no Tor Browser e pressione entrar",warnTitle:"Segurança",warnHead:"Aviso de phishing",warnBody:"O endereço exibido nesta página é o único oficial. Qualquer outro endereço fingindo ser nosso é falso — confira sempre os caracteres.",footer:"Sem rastreio · Sem cookies · Sem requisições externas"},
+  it:{tagline:"Punto di ingresso — solo rete Tor",badge:"SOLO ONION",addrTitle:"Indirizzo",copy:"Copia indirizzo",copied:"Copiato ✓",openBtn:"Apri in Tor Browser",howTitle:"Come accedere",s1:"Scarica Tor Browser dal sito ufficiale torproject.org",s2:"Copia l'indirizzo mostrato sopra",s3:"Incollalo in Tor Browser e premi invio",warnTitle:"Sicurezza",warnHead:"Avviso phishing",warnBody:"L'indirizzo mostrato in questa pagina è l'unico ufficiale. Qualsiasi altro indirizzo che si spaccia per noi è contraffatto — controlla sempre i caratteri.",footer:"Nessun tracciamento · Nessun cookie · Nessuna richiesta esterna"},
+  uk:{tagline:"Точка входу — лише мережа Tor",badge:"ЛИШЕ TOR",addrTitle:"Адреса",copy:"Копіювати адресу",copied:"Скопійовано ✓",openBtn:"Відкрити в Tor Browser",howTitle:"Як потрапити",s1:"Завантажте Tor Browser з офіційного сайту torproject.org",s2:"Скопіюйте адресу, показану вище",s3:"Вставте її в Tor Browser і натисніть введення",warnTitle:"Безпека",warnHead:"Попередження про фішинг",warnBody:"Адреса, показана на цій сторінці, — єдина офіційна. Будь-яка інша адреса, що видає себе за нас, — підробка — завжди звіряйте символи.",footer:"Без трекерів · Без cookie · Без зовнішніх запитів"}
+};
+
+const select = document.getElementById("lang");
+
+function apply(lang){
+  const t = I18N[lang] || I18N.en;
+  document.documentElement.lang = lang;
+  document.documentElement.dir = t.dir || "ltr";
+  document.querySelectorAll("[data-i]").forEach(el => {
+    const v = t[el.dataset.i];
+    if (typeof v === "string") el.textContent = v;
+  });
+  try { localStorage.setItem("bc-lang", lang); } catch(e){}
+}
+
+select.addEventListener("change", () => apply(select.value));
+
+let saved = null;
+try { saved = localStorage.getItem("bc-lang"); } catch(e){}
+const nav = (navigator.language || "en").slice(0,2).toLowerCase();
+const initial = saved && I18N[saved] ? saved : (I18N[nav] ? nav : "ar");
+select.value = initial;
+apply(initial);
+
+// زر النسخ
+document.getElementById("copyBtn").addEventListener("click", async function(){
+  const t = I18N[select.value] || I18N.ar;
+  let ok = false;
+  try { await navigator.clipboard.writeText(ONION); ok = true; } catch(e){}
+  if (!ok) {
+    const ta = document.createElement("textarea");
+    ta.value = ONION; document.body.appendChild(ta);
+    ta.select(); try { document.execCommand("copy"); ok = true; } catch(e){}
+    ta.remove();
+  }
+  this.textContent = ok ? t.copied : ONION;
+  setTimeout(() => { this.textContent = t.copy; }, 2200);
+});
+</script>
+</body>
+</html>
