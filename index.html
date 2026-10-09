@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex, nofollow">
+<meta name="color-scheme" content="dark">
+<title>BlackCode</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231b1633'/%3E%3Cpath d='M24 20 12 32l12 12M40 20l12 12-12 12' fill='none' stroke='%23f0b94d' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>
+:root{
+  --ground:#171230; --plate:#221b45; --line:#3a306a; --text:#ece8f8; --muted:#a79fcb;
+  --accent:#f0b94d; --accent-ink:#2a1d00; --ok:#7fd8a6; --warn:#ff9b8a;
+  --serif:Georgia,"Noto Naskh Arabic","Times New Roman",serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Tahoma,"Noto Sans Arabic",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+}
+*{box-sizing:border-box}
+html{background:var(--ground)}
+body{margin:0;min-height:100vh;color:var(--text);font:17px/1.8 var(--sans);
+  background:radial-gradient(1200px 500px at 50% -10%,#2b2060 0%,transparent 70%),var(--ground);
+  padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+.wrap{max-width:760px;margin:0 auto;padding:28px 22px 56px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:19px;letter-spacing:.2px}
+.brand svg{width:34px;height:34px}
+.lang{background:none;border:1px solid var(--line);color:var(--muted);border-radius:8px;padding:6px 14px;font:inherit;font-size:14px;cursor:pointer}
+.lang:hover{color:var(--text);border-color:var(--muted)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+h1{font:700 clamp(34px,7vw,56px)/1.25 var(--serif);margin:64px 0 14px}
+.lead{color:var(--muted);max-width:34em;margin:0 0 40px;font-size:18px}
+.plate{background:var(--plate);border:1px solid var(--line);border-radius:14px;padding:22px}
+.plate h2{margin:0 0 12px;font-size:15px;font-weight:600;color:var(--muted)}
+.addr{direction:ltr;text-align:left;font:600 clamp(15px,3.6vw,21px)/1.6 var(--mono);word-break:break-all;
+  color:var(--accent);background:#150f2c;border:1px dashed var(--line);border-radius:10px;padding:16px 18px;user-select:all}
+.addr.bad{color:var(--warn)}
+.row{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px}
+.btn{font:600 16px var(--sans);border-radius:10px;padding:12px 22px;border:1px solid transparent;cursor:pointer;text-decoration:none;display:inline-block}
+.btn.primary{background:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.ghost{background:transparent;color:var(--text);border-color:var(--line)}
+.btn.ghost:hover{border-color:var(--muted)}
+.status{min-height:1.6em;margin-top:10px;font-size:14px;color:var(--ok)}
+section{margin-top:52px}
+h3{font:700 24px/1.4 var(--serif);margin:0 0 14px}
+ol.steps{margin:0;padding:0;list-style:none;counter-reset:s}
+ol.steps li{counter-increment:s;position:relative;padding-inline-start:46px;margin-bottom:18px}
+ol.steps li::before{content:counter(s);position:absolute;inset-inline-start:0;top:2px;width:30px;height:30px;border-radius:50%;
+  background:var(--plate);border:1px solid var(--line);display:grid;place-items:center;font:600 14px var(--sans);color:var(--accent)}
+.note{border-inline-start:3px solid var(--accent);padding:4px 16px;color:var(--muted);margin:0}
+footer{margin-top:64px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+a{color:var(--accent)}
+.hero-in{animation:rise .7s ease-out both}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.hero-in{animation:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="brand">
+    <svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="#221b45"/><path d="M24 20 12 32l12 12M40 20l12 12-12 12" fill="none" stroke="#f0b94d" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span>BlackCode</span>
+  </div>
+  <button class="lang" id="langBtn" type="button">English</button>
+</header>
+
+<main>
+  <h1 data-k="title"></h1>
+  <p class="lead" data-k="lead"></p>
+
+  <div class="plate hero-in">
+    <h2 data-k="plateTitle"></h2>
+    <div class="addr" id="addr" dir="ltr"></div>
+    <div class="row">
+      <button class="btn primary" id="copyBtn" type="button" data-k="copy"></button>
+      <a class="btn ghost" id="openBtn" data-k="open" rel="noopener noreferrer" href="#"></a>
+    </div>
+    <div class="status" id="status" role="status" aria-live="polite"></div>
+  </div>
+
+  <section>
+    <h3 data-k="howTitle"></h3>
+    <ol class="steps">
+      <li data-k="s1" data-html></li>
+      <li data-k="s2"></li>
+      <li data-k="s3"></li>
+    </ol>
+  </section>
+
+  <section>
+    <h3 data-k="safeTitle"></h3>
+    <p class="note" data-k="safe1"></p>
+    <p class="note" style="margin-top:12px" data-k="safe2"></p>
+  </section>
+</main>
+
+<footer data-k="foot"></footer>
+</div>
+
+<script>
+// ====== EDIT THIS: your v3 onion address (56 chars + .onion), without http:// ======
+var ONION = "e4e67lxi4m33rcm5ztfcuyohjrjhhbgavn36flpeyqony5ev5kts5rqd.onion";
+// ====================================================================================
+
+var T = {
+  ar: {
+    dir:"rtl", btn:"English",
+    title:"منتدى المبرمجين على شبكة تور",
+    lead:"BlackCode مجتمع للمبرمجين لبيع وشراء الأكواد المصدرية والصفحات الجاهزة. المنتدى يعمل حصريًا على شبكة تور حفاظًا على الخصوصية، وهذه الصفحة وظيفتها الوحيدة أن تعطيك الرابط الصحيح.",
+    plateTitle:"عنوان المنتدى الرسمي (Onion)",
+    copy:"نسخ العنوان", open:"فتح في Tor Browser",
+    copied:"تم النسخ", failed:"تعذر النسخ تلقائيًا، حدد العنوان وانسخه يدويًا",
+    notSet:"لم يتم ضبط العنوان بعد",
+    howTitle:"طريقة الدخول",
+    s1:"نزّل متصفح Tor من الموقع الرسمي <a href=\"https://www.torproject.org/download/\" rel=\"noopener noreferrer\" target=\"_blank\">torproject.org</a> وثبّته.",
+    s2:"انسخ العنوان من الأعلى والصقه في شريط العنوان داخل Tor Browser.",
+    s3:"انتظر ثوانٍ حتى يتم الاتصال، فقد يكون التحميل أبطأ من المواقع العادية.",
+    safeTitle:"للأمان",
+    safe1:"هذا هو العنوان الوحيد الرسمي. قارن أول وآخر عدة أحرف دائمًا، فالروابط المقلّدة تتشابه في البداية فقط.",
+    safe2:"لا تفتح العنوان من متصفح عادي، ولا تسجل بنفس بياناتك الحقيقية.",
+    foot:"صفحة ثابتة بدون ملفات تعريف ارتباط أو تتبع أو طلبات لجهات خارجية."
+  },
+  en: {
+    dir:"ltr", btn:"العربية",
+    title:"The programmers' forum on Tor",
+    lead:"BlackCode is a community where programmers buy and sell source code and ready-made web pages. The forum runs only on the Tor network to protect privacy. This page exists for one reason: to give you the correct address.",
+    plateTitle:"Official forum address (Onion)",
+    copy:"Copy address", open:"Open in Tor Browser",
+    copied:"Copied", failed:"Automatic copy failed. Select the address and copy it manually.",
+    notSet:"Address not configured yet",
+    howTitle:"How to connect",
+    s1:"Download Tor Browser from the official site, <a href=\"https://www.torproject.org/download/\" rel=\"noopener noreferrer\" target=\"_blank\">torproject.org</a>, and install it.",
+    s2:"Copy the address above and paste it into the address bar of Tor Browser.",
+    s3:"Wait a few seconds for the connection. Loading can be slower than regular sites.",
+    safeTitle:"Stay safe",
+    safe1:"This is the only official address. Always compare the first and last characters; fake links usually match only at the start.",
+    safe2:"Never open the address in a regular browser, and don't register with your real identity.",
+    foot:"Static page. No cookies, no tracking, no third-party requests."
+  }
+};
+
+var lang = (localStorageGet("bc_lang")) || ((navigator.language||"").slice(0,2) === "ar" ? "ar" : "en");
+function localStorageGet(k){ try{ return localStorage.getItem(k);}catch(e){ return null; } }
+function localStorageSet(k,v){ try{ localStorage.setItem(k,v);}catch(e){} }
+
+var addrEl = document.getElementById("addr"), status = document.getElementById("status");
+var okAddr = /^[a-z2-7]{56}\.onion$/.test(ONION);
+
+function render(){
+  var d = T[lang];
+  document.documentElement.lang = lang;
+  document.documentElement.dir = d.dir;
+  document.getElementById("langBtn").textContent = d.btn;
+  document.querySelectorAll("[data-k]").forEach(function(el){
+    var v = d[el.getAttribute("data-k")];
+    if(el.hasAttribute("data-html")) el.innerHTML = v; else el.textContent = v;
+  });
+  addrEl.textContent = okAddr ? ONION : d.notSet;
+  addrEl.classList.toggle("bad", !okAddr);
+  var open = document.getElementById("openBtn");
+  open.href = okAddr ? "http://" + ONION : "#";
+  status.textContent = "";
+}
+document.getElementById("langBtn").addEventListener("click", function(){
+  lang = lang === "ar" ? "en" : "ar"; localStorageSet("bc_lang", lang); render();
+});
+document.getElementById("copyBtn").addEventListener("click", function(){
+  if(!okAddr) return;
+  var d = T[lang];
+  function fallback(){
+    var r = document.createRange(); r.selectNodeContents(addrEl);
+    var s = getSelection(); s.removeAllRanges(); s.addRange(r);
+    try{ document.execCommand("copy") ? ok() : fail(); }catch(e){ fail(); }
+  }
+  function ok(){ status.style.color="var(--ok)"; status.textContent = d.copied; }
+  function fail(){ status.style.color="var(--warn)"; status.textContent = d.failed; }
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(ONION).then(ok, fallback);
+  } else fallback();
+});
+document.getElementById("openBtn").addEventListener("click", function(e){ if(!okAddr) e.preventDefault(); });
+render();
+</script>
+</body>
+</html>
